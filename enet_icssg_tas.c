@@ -396,7 +396,64 @@ void EnetTas_mainTask(void *args)
 
     Drivers_open();
     Board_driversOpen();
+#define PYTEC
+   #ifdef  PYTEC
+         //EnetTrace_setLevel(ENET_TRACE_INFO);
+         //DebugP_log((char*)"Wait to press BTN1 on PHYTEC board...\r\n");
+         //PHYTEC_button_task();
+         //дефайны для совместимости между конфигурациями Sysconfig
+         #ifndef PHYTEC_ETH1_RST_BASE_ADDR
+         #define PHYTEC_ETH1_RST_BASE_ADDR (CSL_GPIO1_BASE)
+         #endif
+         #ifndef PHYTEC_ETH1_RST_PIN
+         #define PHYTEC_ETH1_RST_PIN (18)
+         #endif
+         #ifndef PHYTEC_ETH1_RST_DIR
+         #define PHYTEC_ETH1_RST_DIR (GPIO_DIRECTION_OUTPUT)
+         #endif
+         #ifndef PHYTEC_ETH2_RST_BASE_ADDR
+         #define PHYTEC_ETH2_RST_BASE_ADDR (CSL_GPIO1_BASE)
+         #endif
+         #ifndef PHYTEC_ETH2_RST_PIN
+         #define PHYTEC_ETH2_RST_PIN (19)
+         #endif
+         #ifndef PHYTEC_ETH2_RST_DIR
+         #define PHYTEC_ETH2_RST_DIR (GPIO_DIRECTION_OUTPUT)
+         #endif
 
+         GPIO_setDirMode(PHYTEC_ETH1_RST_BASE_ADDR, PHYTEC_ETH1_RST_PIN, PHYTEC_ETH1_RST_DIR);
+         GPIO_setDirMode(PHYTEC_ETH2_RST_BASE_ADDR, PHYTEC_ETH2_RST_PIN, PHYTEC_ETH2_RST_DIR);
+         uint32_t    gpioBaseAddr, pinNum;
+         /*
+          * Настройка пина EXT_REFCLK1 (A19) как выхода тактового сигнала CLKOUT0
+         */
+         *(volatile uint32_t *)0x000F4274 = 0x10005;
+
+       /*
+       * Включение генератора CLKOUT0 на частоте 25 МГц
+       */
+             *(volatile uint32_t *)0x43008010 = 0x11;
+                uint32_t value;
+
+
+       gpioBaseAddr = (uint32_t) AddrTranslateP_getLocalAddr(PHYTEC_ETH1_RST_BASE_ADDR);
+       pinNum       = PHYTEC_ETH1_RST_PIN;
+
+       GPIO_pinWriteLow(gpioBaseAddr, pinNum);  // PHY reset asserted
+       ClockP_usleep(10000U);                   // например, 10 ms
+
+       GPIO_pinWriteHigh(gpioBaseAddr, pinNum); // PHY reset released
+       ClockP_usleep(50000U);                   // ожидание boot PHY / MDIO
+
+       gpioBaseAddr = (uint32_t) AddrTranslateP_getLocalAddr(PHYTEC_ETH2_RST_BASE_ADDR);
+       pinNum       = PHYTEC_ETH2_RST_PIN;
+
+       GPIO_pinWriteLow(gpioBaseAddr, pinNum);  // PHY reset asserted
+       ClockP_usleep(10000U);                   // например, 10 ms
+
+       GPIO_pinWriteHigh(gpioBaseAddr, pinNum); // PHY reset released
+       ClockP_usleep(50000U);                   // ожидание boot PHY / MDIO
+   #endif
     DebugP_log("==========================\r\n");
     DebugP_log("   ENET ICSSG TAS TEST    \r\n");
     DebugP_log("==========================\r\n");

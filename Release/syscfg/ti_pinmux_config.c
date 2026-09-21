@@ -60,7 +60,19 @@ static Pinmux_PerCfg_t gPinMuxMainDomainCfg[] = {
         ( PIN_MODE(0) | PIN_INPUT_ENABLE | PIN_PULL_DISABLE )
     },
 
-        
+                    /* GPIO1 pin config */
+    /* GPIO1_18 -> PRG0_PRU0_GPO18 (V1) */
+    {
+        PIN_PRG0_PRU0_GPO18,
+        ( PIN_MODE(7) | PIN_INPUT_ENABLE | PIN_PULL_DISABLE )
+    },
+            /* GPIO1 pin config */
+    /* GPIO1_17 -> PRG0_PRU0_GPO17 (U1) */
+    {
+        PIN_PRG0_PRU0_GPO17,
+        ( PIN_MODE(7) | PIN_INPUT_ENABLE | PIN_PULL_DISABLE )
+    },
+
 
             /* PRU_ICSSG0_MDIO0 pin config */
     /* PRG0_MDIO0_MDC -> PRG0_MDIO0_MDC (P3) */
@@ -73,15 +85,15 @@ static Pinmux_PerCfg_t gPinMuxMainDomainCfg[] = {
         PIN_PRG0_MDIO0_MDIO,
         ( PIN_MODE(0) | PIN_INPUT_ENABLE | PIN_PULL_DISABLE )
     },
-    /* PRU_ICSSG0_IEP0 pin config */
-    /* PRG0_IEP0_EDC_LATCH_IN0 -> PRG0_PRU0_GPO18 (V1) */
+    /* PRU_ICSSG0_IEP1 pin config */
+    /* PRG0_IEP1_EDC_LATCH_IN0 -> PRG0_PRU1_GPO18 (P5) */
     {
-        PIN_PRG0_PRU0_GPO18,
+        PIN_PRG0_PRU1_GPO18,
         ( PIN_MODE(2) | PIN_INPUT_ENABLE | PIN_PULL_DISABLE )
     },
-    /* PRG0_IEP0_EDC_SYNC_OUT0 -> PRG0_PRU0_GPO19 (W1) */
+    /* PRG0_IEP1_EDC_SYNC_OUT0 -> PRG0_PRU1_GPO19 (R2) */
     {
-        PIN_PRG0_PRU0_GPO19,
+        PIN_PRG0_PRU1_GPO19,
         ( PIN_MODE(2) | PIN_PULL_DISABLE )
     },
     /* PRU_ICSSG0_MII_G_RT pin config */
@@ -259,7 +271,7 @@ static Pinmux_PerCfg_t gPinMuxMcuDomainCfg[] = {
         PIN_MCU_SPI1_CS0,
         ( PIN_MODE(7) | PIN_INPUT_ENABLE | PIN_PULL_DISABLE )
     },
-
+                
 
         
         

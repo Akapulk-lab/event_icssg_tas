@@ -12,6 +12,8 @@ const eeprom     = scripting.addModule("/board/eeprom/eeprom", {}, false);
 const eeprom1    = eeprom.addInstance();
 const gpio       = scripting.addModule("/drivers/gpio/gpio", {}, false);
 const gpio1      = gpio.addInstance();
+const gpio2      = gpio.addInstance();
+const gpio3      = gpio.addInstance();
 const i2c        = scripting.addModule("/drivers/i2c/i2c", {}, false);
 const i2c1       = i2c.addInstance();
 const i2c2       = i2c.addInstance();
@@ -39,6 +41,14 @@ gpio1.pinDir                   = "OUTPUT";
 gpio1.useMcuDomainPeripherals  = true;
 gpio1.MCU_GPIO.$assign         = "MCU_GPIO0";
 gpio1.MCU_GPIO.gpioPin.$assign = "ball.A7";
+
+gpio2.$name                = "PHYTEC_ETH1_RST";
+gpio2.pinDir               = "OUTPUT";
+gpio2.GPIO.gpioPin.$assign = "ball.V1";
+
+gpio3.$name                = "PHYTEC_ETH2_RST";
+gpio3.pinDir               = "OUTPUT";
+gpio3.GPIO.gpioPin.$assign = "ball.U1";
 
 i2c1.$name               = "CONFIG_I2C0";
 eeprom1.peripheralDriver = i2c1;
@@ -121,19 +131,35 @@ const udma1        = udma.addInstance({}, false);
 enet_icss1.udmaDrv = udma1;
 
 /**
+ * These are the reserved peripherals and settings in this configuration
+ */
+const iSYSTEM1            = scripting.addPeripheral("SYSTEM");
+iSYSTEM1.$name            = "MySYSTEM1";
+iSYSTEM1.CLKOUT0.$used    = false;
+iSYSTEM1.FCLK_MUX.$used   = false;
+iSYSTEM1.OBSCLK0.$used    = false;
+iSYSTEM1.SYNC0_OUT.$used  = false;
+iSYSTEM1.SYNC1_OUT.$used  = false;
+iSYSTEM1.SYNC2_OUT.$used  = false;
+iSYSTEM1.SYNC3_OUT.$used  = false;
+iSYSTEM1.SYSCLKOUT0.$used = false;
+
+/**
  * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
+gpio2.GPIO.$suggestSolution                                 = "GPIO1";
+gpio3.GPIO.$suggestSolution                                 = "GPIO1";
 debug_log.uartLog.UART.$suggestSolution                     = "USART0";
 debug_log.uartLog.UART.RXD.$suggestSolution                 = "ball.D15";
 debug_log.uartLog.UART.TXD.$suggestSolution                 = "ball.C16";
 enet_icss1.PRU_ICSSG0_MDIO.$suggestSolution                 = "PRU_ICSSG0_MDIO0";
 enet_icss1.PRU_ICSSG0_MDIO.MDC.$suggestSolution             = "ball.P3";
 enet_icss1.PRU_ICSSG0_MDIO.MDIO.$suggestSolution            = "ball.P2";
-enet_icss1.PRU_ICSSG0_IEP.$suggestSolution                  = "PRU_ICSSG0_IEP0";
-enet_icss1.PRU_ICSSG0_IEP.EDC_LATCH_IN0.$suggestSolution    = "ball.V1";
-enet_icss1.PRU_ICSSG0_IEP.EDC_SYNC_OUT0.$suggestSolution    = "ball.W1";
+enet_icss1.PRU_ICSSG0_IEP.$suggestSolution                  = "PRU_ICSSG0_IEP1";
+enet_icss1.PRU_ICSSG0_IEP.EDC_LATCH_IN0.$suggestSolution    = "ball.P5";
+enet_icss1.PRU_ICSSG0_IEP.EDC_SYNC_OUT0.$suggestSolution    = "ball.R2";
 enet_icss1.PRU_ICSSG0_MII_G_RT.$suggestSolution             = "PRU_ICSSG0_MII_G_RT";
 enet_icss1.PRU_ICSSG0_MII_G_RT.MII0_RXD0.$suggestSolution   = "ball.Y1";
 enet_icss1.PRU_ICSSG0_MII_G_RT.MII0_RXD1.$suggestSolution   = "ball.R4";
@@ -165,3 +191,9 @@ enet_icss1.PRU_ICSSG0_MII_G_RT.MII_MR0_CLK.$suggestSolution = "ball.T3";
 enet_icss1.PRU_ICSSG0_MII_G_RT.MII_MR1_CLK.$suggestSolution = "ball.R5";
 enet_icss1.PRU_ICSSG0_MII_G_RT.MII_MT0_CLK.$suggestSolution = "ball.U4";
 enet_icss1.PRU_ICSSG0_MII_G_RT.MII_MT1_CLK.$suggestSolution = "ball.AA4";
+iSYSTEM1.$suggestSolution                                   = "SYSTEM0";
+iSYSTEM1.EXTINTn.$suggestSolution                           = "ball.C19";
+iSYSTEM1.EXT_REFCLK1.$suggestSolution                       = "ball.A19";
+iSYSTEM1.PORz_OUT.$suggestSolution                          = "ball.E17";
+iSYSTEM1.RESET_REQz.$suggestSolution                        = "ball.E18";
+iSYSTEM1.RESETSTATz.$suggestSolution                        = "ball.F16";
